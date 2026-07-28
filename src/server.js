@@ -6,7 +6,7 @@ app.use(express.json());
 
 // Health Check
 app.get('/api/auth/health', (req, res) => {
-  res.status(200).json({ status: 'Auth Service is completely healthy on ECS!' });
+  res.status(200).json({ status: 'Auth Service is healthy on ECS! and pipeline is working ' });
 });
 
 // Mock Login Endpoint
