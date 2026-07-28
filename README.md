@@ -321,13 +321,3 @@ docker run -p 3001:3001 auth-service:v1
 - **RDS or DynamoDB integration** — currently all data is mocked in-memory; swapping in a real datastore would complete the picture
 
 ---
-
-## 📸 Screenshots — Status
-
-All 20 screenshots plus the architecture diagram are captured and embedded above — nothing outstanding. Drop the `docs/` and `screenshots/` folders next to this `README.md` in your repo root and every image will render as-is on GitHub.
-
----
-
-## 📄 License
-
-[Add your license here, e.g. MIT]
