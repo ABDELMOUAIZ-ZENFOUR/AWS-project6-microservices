@@ -1,6 +1,6 @@
 # Project 6 — Containerized Microservices on Amazon ECS Fargate
 
-**AWS Solutions Architect – Associate | Manara Graduation Project**
+**AWS Solutions Architect – Associate | AWS Project**
 **Author:** Abdelmouaiz Zenfour · www.linkedin.com/in/zenfour/ · a_zenfour@inptic.edu.dz
 
 > Migrating a monolithic Node.js application into three independently deployable microservices — **Auth**, **Orders**, and **Notifications** — running serverlessly on **Amazon ECS Fargate**, discoverable via **AWS Cloud Map**, load-balanced by an **Application Load Balancer**, backed by **ElastiCache (Valkey/Redis)** for shared session state, secured with **AWS Secrets Manager**, and deployed automatically through a **CodePipeline + CodeBuild** CI/CD pipeline.
