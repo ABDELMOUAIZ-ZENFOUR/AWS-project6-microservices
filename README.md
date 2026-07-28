@@ -26,20 +26,11 @@ The result is an architecture that was never "deployed and hoped for the best" �
 
 ## 🏗️ Architecture Diagram
 
-*(Embed your Lucidchart/Draw.io export here once exported)*
+![Project 6 Architecture Diagram](docs/architecture-diagram.png)
 
-```markdown
-![Architecture Diagram](docs/architecture-diagram.png)
-```
+**Request flow:** a public user hits the ALB on port 80 → path-based routing (`/api/auth`, `/api/orders`, `/api/notifications`) sends traffic to the matching ECS Fargate service in the private subnets. Each service resolves the others through **AWS Cloud Map** (`project6.local`), reads/writes sessions in **Valkey (ElastiCache)**, and pulls `JWT_SECRET` from **AWS Secrets Manager** at startup.
 
-**What the diagram should show** (per Manara's deliverable requirements):
-- Public Internet / Client → Application Load Balancer (Port 80)
-- ALB path-based routing → `/api/auth`, `/api/orders`, `/api/notifications`
-- ECS Fargate tasks running in private subnets, one service per microservice
-- AWS Cloud Map (`project6.local`) for internal service-to-service DNS
-- Amazon ElastiCache (Valkey/Redis) for shared session caching
-- AWS Secrets Manager injecting `JWT_SECRET` at container runtime
-- CI/CD flow: GitHub → CodePipeline → CodeBuild → ECR → ECS (Rolling Update)
+**Deployment flow (right side):** a push to `main` on GitHub triggers **CodePipeline**, which runs **CodeBuild** to build and push a new image to **ECR**, then rolls it onto the ECS service — no manual console steps.
 
 ---
 
@@ -78,7 +69,7 @@ project6-microservices/
 │   ├── phase3-task-definition-auth.png
 │   ├── phase3-alb-details.png
 │   ├── phase4-elasticache-valkey.png
-│   ├── phase4-cloudmap-namespace.png        ← pending
+│   ├── phase4-cloudmap-namespace.png
 │   ├── phase5-env-variables.png
 │   ├── phase5-secrets-manager-secret.png
 │   ├── phase6-target-group-healthy-auth.png
@@ -90,7 +81,7 @@ project6-microservices/
 │   ├── phase6-logs-auth-service.png
 │   ├── phase6-logs-orders-service.png
 │   ├── phase6-logs-notifications-service.png
-│   └── phase6-codepipeline-success.png      ← pending
+│   └── phase6-codepipeline-success.png
 ├── auth-service/
 │   ├── src/
 │   │   └── server.js
@@ -196,7 +187,9 @@ Repeated for all three services, confirming each returned a `200 OK` with the ex
 
 *`project6-valkey`, single-node `cache.t4g.micro`, Valkey engine 9.1.0 — provisioning after security group and subnet group were locked down.*
 
-> 📸 *Cloud Map namespace screenshot pending — will slot in above once added.*
+![Cloud Map namespace](screenshots/phase4-cloudmap-namespace.png)
+
+*`project6.local` namespace, instance discovery set to **API calls and DNS queries in VPCs** — private and unreachable from outside the VPC.*
 
 ---
 
@@ -255,7 +248,9 @@ Repeated for all three services, confirming each returned a `200 OK` with the ex
 - Attached `AmazonEC2ContainerRegistryPowerUser` to the CodeBuild service role so it could push to ECR
 - **Proved it live:** changed a response string in `auth-service`, pushed to `main`, and watched CodePipeline automatically build, push, and roll the change onto Fargate with zero manual console steps
 
-> 📸 *CodePipeline success screenshot (all stages green) pending — will slot in above once added.*
+![CodePipeline all stages green](screenshots/phase6-codepipeline-success.png)
+
+*`project6-auth-pipeline` — Source (GitHub App) → Build (CodeBuild) → Deploy (Amazon ECS), all three stages succeeded automatically from a single `git push`.*
 
 ---
 
@@ -329,13 +324,7 @@ docker run -p 3001:3001 auth-service:v1
 
 ## 📸 Screenshots — Status
 
-17 of the 20 screenshots are in and embedded above. Still pending:
-
-- [ ] `phase4-cloudmap-namespace.png` — Cloud Map namespace (`project6.local`) with registered services *(Phase 4)*
-- [ ] `phase6-codepipeline-success.png` — CodePipeline dashboard, all three stages green *(Phase 6)*
-- [ ] Architecture diagram (Lucidchart/Draw.io export) for the top of this README *(required Manara deliverable)*
-
-Send those over whenever you have them and I'll drop them straight into the matching sections.
+All 20 screenshots plus the architecture diagram are captured and embedded above — nothing outstanding. Drop the `docs/` and `screenshots/` folders next to this `README.md` in your repo root and every image will render as-is on GitHub.
 
 ---
 
